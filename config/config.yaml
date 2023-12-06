@@ -1,6 +1,6 @@
 debug: false
 
-web_server: "http://localhost:3030"
+web_server: "http://127.0.0.1:3030"
 
 version: "v1.0"
 
@@ -10,7 +10,7 @@ upload:
   port: 8000
   tmp_dir: "tmp" # temp location to receive stream
   staging_dir: "staging" # path to staging folder
-  allowed_extensions: ["zlib", "mp4", "json", "jsonl"]
+  allowed_extensions: ["zlib", "mp4", "json", "jsonl", "acce", "mag", "rot", "txt", "atti", "grav"]
   autoprocess: ["convert", "recons", "texturing", "segmentation", "render", "thumbnail", "clean"] # list of steps be auto processed after uploading
   index_url: "${web_server}/scans/index/"
   convert_video_url: "${web_server}/scans/monitor/convert-video/"
@@ -25,7 +25,7 @@ process:
   port: 5000
   output_folder: outputs
   staging_dir: ${upload.staging_dir}
-  deps_install_path: "/localhome/yma50/miniconda3/envs/multiscan"
+  deps_install_path: "/data3/haoyunq/anaconda3/envs/multiscan"
   process_list: ["convert", "recons", "texturing", "atlasresize", "segmentation", "render", "thumbnail", "alignpairs", "clean"]
   index_url: "${upload.index_url}"
   processed_file: "processed.txt"
