@@ -1,3 +1,11 @@
+# 补充
+
+注意事项:
+
+- 编译方法详见 Slides
+- VSCode 打开 (Remote: Local Port Host - 设置成 allInterfaces) 否则终端设备没法连接服务器
+
+
 # MultiScan: Scalable RGBD scanning for 3D environments with articulated objects
 
 <h4>
