@@ -81,7 +81,7 @@ class Reconstruct(ReconBase):
             mesh_path = os.path.join(self.save_folder(), cfg_output.mesh_filename)
             log.info("Extract triangle mesh")
             if VolumeType[self.config.alg_param.volume_type] == VolumeType.TSDFVoxelGrid:
-                mesh = volume.cpu().extract_surface_mesh(weight_threshold=self.config.alg_param.extract.weight_threshold).to_legacy_triangle_mesh()
+                mesh = volume.cpu().extract_surface_mesh(weight_threshold=self.config.alg_param.extract.weight_threshold).to_legacy()
             else:
                 mesh = volume.extract_triangle_mesh()
             unaligned_mesh_filename = os.path.splitext(mesh_path)[0] + '_unaligned.ply'
