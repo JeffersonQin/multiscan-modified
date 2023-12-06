@@ -328,4 +328,5 @@ def main(cfg : DictConfig):
     io.call(['gunicorn', '--paste', output_ini_file_path], log, desc='Receive file uploads', rundir=get_original_cwd())
 
 if __name__ == "__main__":
+    os.makedirs('tmp', exist_ok=True)
     main()
