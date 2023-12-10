@@ -272,9 +272,9 @@ class Reconstruct(ReconBase):
             else:
                 if os.path.isdir(self.config.input.depth_stream):
                     if depth:
-                        depth = depth.to_legacy_image()
+                        depth = depth.to_legacy()
                     if rgb:
-                        rgb = rgb.to_legacy_image()
+                        rgb = rgb.to_legacy()
 
                 assert rgb is not None, "ScalableTSDFVolume need color frames as input"
 
