@@ -139,7 +139,7 @@ def limit_memory(maxsize):
     resource.setrlimit(resource.RLIMIT_AS, (maxsize, hard))
 
 # TODO: make memory limitation configurable
-def call(cmd, log, rundir='', env=None, desc=None, cpu_num=0, mem=48, print_at_run=True, test_mode=False):
+def call(cmd, log, rundir='', env=None, desc=None, cpu_num=0, mem=500, print_at_run=True, test_mode=False):
     if not cmd:
         log.warning('No command given')
         return 0
