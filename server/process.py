@@ -67,22 +67,26 @@ def process_scan_dir(dirname):
     proc_cfg = OmegaConf.merge(config, proc_cfg)
 
     if proc_cfg.get('overwrite'):
-        # Check timestamp of request (only trigger if the last update timestamp before overwrite)
-        # Prevents duplicates request
-        timestamp = args.get('timestamp')
-        if timestamp is None:
-            resp = jsonify(
-                {'message': 'Please provide timestamp with request'})
-            resp.status_code = 400
-            return resp
-        # Request timestamp should be in milliseconds UTC
-        timestamp = int(timestamp)
-        newer = util.check_last_modified_newer(path, timestamp)
-        if newer:
-            resp = jsonify({'message': 'Scan ' + dirname +
-                           ' modified after request issued, please resubmit request'})
-            resp.status_code = 400
-            return resp
+        # Remove the timestamp logic
+        
+        # # Check timestamp of request (only trigger if the last update timestamp before overwrite)
+        # # Prevents duplicates request
+        # timestamp = args.get('timestamp')
+        # if timestamp is None:
+        #     resp = jsonify(
+        #         {'message': 'Please provide timestamp with request'})
+        #     resp.status_code = 400
+        #     return resp
+        # # Request timestamp should be in milliseconds UTC
+        # timestamp = int(timestamp)
+        # newer = util.check_last_modified_newer(path, timestamp)
+        # if newer:
+        #     resp = jsonify({'message': 'Scan ' + dirname +
+        #                    ' modified after request issued, please resubmit request'})
+        #     resp.status_code = 400
+        #     return resp
+        
+        pass
 
     with GPU_LOCK:
         processed1 = sp.process_scan_dir(path, dirname, proc_cfg, ProcessStage.PRELIMINARY)
