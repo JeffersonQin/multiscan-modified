@@ -33,6 +33,8 @@ log.setLevel(logging.INFO)
 def decode_color(cfg):
     try:
         ret = 0
+        if os.path.exists(cfg.process.color_dir):
+            return 0
         if os.path.isfile(cfg.process.color_stream):
             io.make_clean_folder(cfg.process.color_dir)
             downscale= cfg.process.decode.color_downscale
@@ -54,6 +56,10 @@ def decode_depth(cfg):
     try:
         depth_stream = cfg.process.depth_stream
         depth_out = cfg.process.depth_dir
+        
+        if os.path.exists(depth_out):
+            return 0
+        
         confidence_stream = cfg.process.confidence_stream
         metadata = io.read_json(cfg.process.meta_file)
         width = metadata.get('streams')[1]['resolution'][1]
