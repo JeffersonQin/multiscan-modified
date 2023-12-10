@@ -1,10 +1,128 @@
-# 补充
+# In addition to the original repository
 
-注意事项:
+Please check the commit history for the specific modifications.
 
-- 编译方法详见 Slides
-- VSCode 打开 (Remote: Local Port Host - 设置成 allInterfaces) 否则终端设备没法连接服务器
+For making the project, please first check the original documentations
 
+- https://3dlg-hcvc.github.io/multiscan/read-the-docs/server/index.html
+- https://3dlg-hcvc.github.io/multiscan/read-the-docs/web-ui/index.html
+
+Then please refer to [this slide](./MT-part.pdf) for more details.
+
+After the making step is all done, to start the server, please run the following command:
+
+## Upload server
+
+In the `server` directory, run the following command:
+
+```bash
+python upload.py
+```
+
+## Processing server
+
+In the `server` directory, run the following command:
+
+```bash
+python process.py
+```
+
+Use `CUDA_VISIBLE_DEVICES` to adjust the GPU device.
+
+## Backend Server
+
+In the `web-ui/web-server` directory, run the following command:
+
+```bash
+npm start
+```
+
+## Brief Explanation of part used
+
+Here is a diagram of calling traceback of the servers,
+
+```mermaid
+flowchart TD
+
+A(Scanner App) -->|Upload| B("Upload Server (:8000)")
+B -->|Call| C("Backend Server (:3000)")
+C -->|Dispatch| D("Processing Server (:5000)")
+```
+
+## Tip
+
+If processing failed after upload due to what ever reason, we can always use the URL of the following form to reprocess the scan:
+
+```
+http://<HOST>:5000/process/<STAGING_UUID>?overwrite=0&actions=["convert", "recons", "texturing", "segmentation", "render", "thumbnail"]
+```
+
+The following is an example of the URL:
+
+```
+http://localhost:5000/process/20231203T163511-0500_35B770E8-8B8A-41FB-B1D5-8D9687246ECA?overwrite=0&actions=["convert", "recons", "texturing", "segmentation", "render", "thumbnail"]
+```
+
+## Scripts Added
+
+### `server/crop.py`
+
+This script is used for cropping the scan data to a smaller size to deal with CUDA OOM and other issues.
+
+```
+cd server && python crop.py
+```
+
+Configurations below,
+
+```
+#### Configurations ####
+src = '20231208T164356-0500_2D50E931-A486-4EDE-A859-2982CCB91A95'
+unit = 600
+frame_skip = 10
+########################
+```
+
+Notice that `src` is the staging UUID of the scan. Please change the code if you are not using the default staging directory.
+
+Also notice that in `config.yaml` there is a field called `decode.step`. `frame_skip` refers to this value. I do not implement the `depth_skip`, the whole code is based on `skip=10` and `depth_skip=1`. Feel free to change the code if you want to use other values.
+
+Under this scenario, `unit` refers to the number of frames (of the color frames) in each cropped scan.
+
+For example, if `unit=600`, `frame_skip=10`, `depth_skip=1`, then the cropped scan will each (except the last) have (600 * 10 * 2 = 12000) depth frames and (600 * 2 = 1200) color frames. In terms of color frames, the crops will be `[0, 1200], [600, 1800], [1200, 2400]`, ... and so on.
+
+Feel free to change the code if you want to try other overlapping strategies.
+
+> For those who are using https://github.com/JeffersonQin/DungeonAssistant, the `overlap_discard_num` of `multi_merger_viewer.py` is the number of frames to discard in the beginning of each crop. It should also be changed if you switch the overlapping strategy.
+
+The cropped scan will be saved in the staging directory with the name `src + '-{:02d}'`.
+
+### `server/pipelining.py`
+
+After cropping the scan, we can use this script to process the cropped scans in a pipelining manner.
+
+```
+cd server && python pipelining.py
+```
+
+The code is very straightforward, please modify the code for your own usage. I am not planning to make it a command line tool.
+
+## Mystries
+
+Hope this can help someone who is trying to use this project.
+
+* I tried to increase the num_cpu to 48, but then the processing server will report CUDA OOM and crash. No idea why this happen.
+
+## Troubleshooting
+
+For VSCode users, if you are using the Remote SSH extension, please make sure that the `Remote: Local Port Host` is set to `allInterfaces` in the settings. Otherwise, the terminal devices will not be able to connect to the server.
+
+
+<div align="center">
+    <p>Below is the original README.md</p>
+</div>
+
+---
 
 # MultiScan: Scalable RGBD scanning for 3D environments with articulated objects
 
