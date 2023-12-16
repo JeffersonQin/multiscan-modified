@@ -14,6 +14,7 @@ import simd
 class CameraInfo: Encodable {
     
     private var timestamp: Int64
+    private var timestamp_unix: Int64
     private var intrinsics: simd_float3x3
     private var transform: simd_float4x4
     private var eulerAngles: simd_float3 // Pitch(x) Yaw(y) Roll(z)
@@ -22,6 +23,7 @@ class CameraInfo: Encodable {
     
     internal init(timestamp: TimeInterval, intrinsics: simd_float3x3, transform: simd_float4x4, eulerAngles: simd_float3, exposureDuration: TimeInterval) {
         self.timestamp = Int64(timestamp * 1_000_000_000.0)
+        self.timestamp_unix = Int64(Date().timeIntervalSince1970)
         self.intrinsics = intrinsics
         self.transform = transform
         self.eulerAngles = eulerAngles
